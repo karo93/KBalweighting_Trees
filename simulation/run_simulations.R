@@ -4,8 +4,6 @@ source(file = here::here("simulation", "helper.R"))
 
 method <- "grf_w" # change method here
 dataset_names <- list.files(here::here("simulation", "data"))
-
-dataset_names<- list.files(here::here("00_Data/Kuenzel/"))
 set.seed(123)
 
 cl<-detectCores() - 2
