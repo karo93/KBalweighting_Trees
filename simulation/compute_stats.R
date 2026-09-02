@@ -1,6 +1,6 @@
 # load dataset by choosing the datasetname and splitrule
 
-method <- "xlearner_hard"
+method <- "x_learner_fkbal"
 dataset_names <- list.files(here::here("simulation", "raw_results", method ))
 
 lapply(dataset_names, 
@@ -16,5 +16,5 @@ lapply(dataset_names,
              precision_BIAS =mean((value - true_CATE))
           #   precision_abs_ATE = abs(mean(value)-mean(true_ATE))) # commented out if Metalearner
         ) %>%
-           saveRDS(file=here::here("simulation","statistics", method, choose_dataset))
+           saveRDS(file=here::here("simulation","statistics_results", method, choose_dataset))
        })

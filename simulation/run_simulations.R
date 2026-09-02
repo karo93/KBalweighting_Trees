@@ -2,14 +2,11 @@
 source(file = here::here("simulation", "packages.R"))
 source(file = here::here("simulation", "helper.R"))
 
-method <- "grf_w" # change method here
+method <- "grf_ipw" # change method here
 dataset_names <- list.files(here::here("simulation", "data"))
 set.seed(123)
 
-cl<-detectCores() - 2
-doParallel::registerDoParallel(cl)
-
-for(j in 1:1){
+for(j in 1:length(dataset_names)){
   dat1 <- readRDS(here::here("simulation", "data", dataset_names[j]))
   lapply(1:1000,
          function(i){
@@ -18,10 +15,11 @@ for(j in 1:1){
            Xtestcol_select<-Xcol_select+1
            datTrain <- dat1 %>% filter(sim_id==i) %>% select(2:Xcol_select)
            datTest <- dat1 %>% filter(sim_id==i) %>% select(Xtestcol_select:last_col())
-           x_preds<- CF_Cf_CI_W(X = datTrain %>% select(X1:last_col()) %>% as.data.frame(),
+           x_preds<- CF_Cf_CI_IPW_trimmed(X = datTrain %>% select(X1:last_col()) %>% as.data.frame(),
                                 Y = datTrain$Yobs,
                                 T_ind = datTrain$T_ind,
                                 Xtest = datTest %>% select(Xtest1:last_col())  %>% as.data.frame())
+                                #T_ind_test= datTest$T_ind)
            
            
            # change x_preds to the method you are using
@@ -33,4 +31,4 @@ for(j in 1:1){
          }
   ) %>% 
     saveRDS(file = here::here("simulation", "raw_results", method, dataset_names[j]))
-  }
+}

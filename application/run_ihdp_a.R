@@ -40,4 +40,26 @@ output_path <- file.path(output_dir, paste0(method, "_results.rds"))
 saveRDS(all_results, file = output_path)
 
 
+# Note that IHDP application contains both continuous and binary covariates. We have to specify the kbal weight differently, since we have continous and binary covariates
+# e.g for CF KBAl
+names_bin<- c("X4",paste0("X", 7:25))
 
+CF_Cf_CI_W <- function(X, Y, T_ind, Xtest){
+  kbalout_treated <- kbal::kbal(allx = X, mixed_data = TRUE, cat_columns = names_bin,
+                                sampled = T_ind, sampledinpop = TRUE, ebal.tol = 1e-4,
+                                b = length(X), printprogress = T, linkernel = FALSE,
+                                scale_data = FALSE,cont_scale = 1,maxnumdims = 140 )
+  kbalout_control <- kbal::kbal(allx = X, sampled = 1 - T_ind, sampledinpop = TRUE,
+                                mixed_data = TRUE, cat_columns = names_bin, ebal.tol = 1e-4,
+                                b = length(X), printprogress = T, linkernel = FALSE,
+                                scale_data = FALSE, cont_scale = 1,maxnumdims = 140)
+  weights_kbal <- ifelse(kbalout_treated$w == 1, kbalout_control$w, kbalout_treated$w)
+  
+  fit <- grf::causal_forest(X, Y, T_ind, sample.weights =weights_kbal, num.trees = 4000) 
+  pred <- predict(fit, Xtest, estimate.variance = TRUE)
+  
+  CI <- data.frame(low = pred[, 1] - 1.96 * sqrt(pred[, 2]),
+                   high = pred[, 1] + 1.96 * sqrt(pred[, 2]))
+  
+  return(data.frame(lower = CI$low, upper = CI$high, pred = pred[, 1]))
+}

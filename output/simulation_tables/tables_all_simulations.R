@@ -1,5 +1,5 @@
 # Define file paths
-path_in  <- here::here("simulation", "raw_results")
+path_in  <- here::here("simulation", "statistics_results")
 path_out <- here::here("simulation", "aggregated_results")
 
 dir.create(path_out, recursive = TRUE, showWarnings = FALSE)

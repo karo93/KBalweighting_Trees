@@ -1,65 +1,6 @@
 ##Helper File##
 
 
-#### Data generation ####
-
-
-gen_data = function(sim=1, # number of simulations
-                    n=1000, # number of observations
-                    ntest=1000, # number of unseen test points
-                    d=10, # number of independent variables
-                    indep_covariate, 
-                    homosc_err, 
-                    rho
-){
-  
-  sim_id <- rep(1:sim, each=n)
-  
-  errdist <- rnorm
-  
-  X <- Xfun(n*sim, d, indep_covariate, rho)
-  colnames(X) <- paste("X", seq(d), sep="")
-  Y0 <- rep(0, n*sim)
-  tau <- taufun(X) 
-  std <- sdfun(X, homosc_err)
-  Y1 <- tau + std * errdist(n*sim)
-  ps <- psfun(X)
-  T_ind <- as.numeric(runif(n*sim) < ps)
-  Yobs <- Y0
-  Yobs[T_ind == 1] <- Y1[T_ind == 1]
-  
-  Xtest <- Xfun(ntest*sim, d, indep_covariate, rho)
-  colnames(Xtest) <- paste("Xtest", seq(d), sep="")
-  Y0test <- rep(0, ntest*sim)
-  tautest <- taufun(Xtest) # true CATE
-  stdtest <- sdfun(Xtest, homosc_err)
-  Y1test <- tautest + stdtest * errdist(ntest*sim) # true ITE
-  pstest <- psfun(Xtest)
-  T_ind_test <- as.numeric(runif(ntest) < pstest)
- 
-  dat = tibble(
-    sim_id, 
-    Y1,
-    Y0,
-    tau,
-    ps, 
-    T_ind, 
-    Yobs, 
-    as.tibble(X),
-    Y1test,
-    Y0test,
-    tautest,
-    pstest, 
-    T_ind_test,
-    as.tibble(Xtest),
-  )
-  
-  arrange(dat, sim_id)
-  
-  return(dat)
-  
-}
-
 Xfun <- function(n, d, indep_covariate, rho){
   if(indep_covariate==T){
     # independent covariates
