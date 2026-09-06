@@ -1,6 +1,6 @@
 # KBal Weighting for Tree-Based Methods
 
-Replication materials for Kernel Balancing in Tree-Based Methods, which integrates kernel balancing (KBal) into the causal forest framework (Wager and Athey, 2018) and the X-learner framework (Künzel et al., 2019) for estimating heterogeneous treatment effects.
+Replication materials for Kernel Balancing in Tree-Based Methods, which integrates kernel balancing (KBal, [Hazlett, 2020](https://www.jstor.org/stable/26968924)) into the causal forest framework ([Wager and Athey, 2018](https://projecteuclid.org/journals/annals-of-statistics/volume-47/issue-2/Generalized-random-forests/10.1214/18-AOS1709.full))  and the X-learner framework ([Künzel et al., 2019](https://www.pnas.org/doi/abs/10.1073/pnas.1804597116)) for estimating heterogeneous treatment effects.
 
 # Overview
 
