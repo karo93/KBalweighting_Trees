@@ -35,3 +35,8 @@ KBalweighting_Trees/
     ├── application_plots/
     └── application_tables/
 ```
+# Requirements
+
+* R (>= 4.3.0). Tested under R version 4.5.3.
+* Necessary packages are installed with packages.R. 
+* The semi-synthetic IHDP benchmark data are obtained from [Shalit et al. (2017)], who made the dataset publicly available at (https://www.fredjo.com/) for Setting A, while Setting B is generated directly using the NPCI R package developed by [Dorie et al. (2016)](https://github.com/vdorie/npci)
